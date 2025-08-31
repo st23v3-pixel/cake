@@ -1,0 +1,177 @@
+:root {
+    --cake-w: 220px;
+    --layer-h: 32px;
+    --gap: 6px;
+    --layers: 3;
+    --icing-h: 24px;
+    --bg: #ffd0dc;
+    --cake: #c7884b;
+    --icing: #fff;
+    --candle: #fff7d6;
+    --flame: #ff9e00;
+}
+* { box-sizing: border-box;}
+html, body { height: 100%; margin: 0; }
+body {
+    background: var(--bg);
+    display: grid;
+    place-items: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.2;
+}
+.cake {
+    position: relative;
+    width: var(--cake-w);
+    height: calc(var(--layers) * (var(--layer-h) + var(--gap)) + 60px);
+
+}
+.layer {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: var(--layer-h);
+    background: linear-gradient(#cd9561, var(--caka));
+    border-radius: 8px;
+    box-shadow: 0 2px 0 rgba(0,0,0,.1) inset;
+    opacity: 0;
+    transform: translateY(30px);
+    will-change: transform, opacity;
+    z-index: 1;
+}
+.layer:nth-child(1){ bottom: 0;}
+.layer:nth-child(2){ bottom: cal(var(--layer-h) + var(--gap));}
+.layer:nth-child(3){ bottom: cal(2*(var(--layer-h) + var(--gap)));}
+.scene.play .layer {
+    animation: slideUp 500ms ease-out both;
+}
+.scene.play .layer:nth-child(1){ animation-delay: .15s;}
+.scene.play .layer:nth-child(2){ animation-delay: .35s;}
+.scene.play .layer:nth-child(3){animation-delay: .55s;}
+.icing {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: var(--icing-h);
+    background: var(--icing);
+    bottom: calc(2*(var(--layer-h) + var(--gap)) + var(--layer-h) - 6px);
+    border-radius: 10px;
+    z-index: 2;
+    opacity: 0;
+    box-shadow: 0 2px 0 rgba(0,0,0,.08) inset; 
+    overflow: visible;
+    transform: translateY(-30px);
+}
+.icing .drip{
+    position: absolute;
+    width: 18px;
+    height: 24px;
+    background: var(--icing);
+    border-radius: 12px;
+    opacity: 0;
+    transform: scaleY(.6);
+    bottom: -18px;
+    filter: drop-shadow(0 1px 0 rgba(0,0,0,.6));
+}
+.icing .drip.d1{ left: 24px;}
+.icing .drip.d2{ left: 86px; width: 16px; height: 28px;}
+.icing .drip.d3{ right: 28px; height: 22px; width: 14px;}
+.scene.play .icing{
+    animation: icingDrop 520ms ease-out .85s both;
+}
+.scene.play .icing .drip{
+    animation: drip 700ms ease-out both;
+}
+.scene.play .icing .drip.d1{ animation-delay: 1s;}
+.scene.play .icing .drip.d2{ animation-delay: 1.05s;}
+.scene.play .icing .drip.d3{ animation-delay: 1.1s;}
+.candle{
+    position: absolute;
+    width: 12px;
+    height: 46px;
+    border-radius: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: cal(2*(var(--layer-h) + var(--gap)) + var(--layer-h) + var(--icing-h) - 2px);
+    opacity: 0;
+    z-index: 3;
+    background: repeating-linear-gradient(
+        to bottom,
+        #ffe7a6 0 6px,
+        #ffd97a 6px 12px
+
+    );
+    box-shadow: 0 0 0 2px rgba(255,255,255,.6);
+}
+.scene.play .candle{
+    animation: fadeIn 420ms ease .90s both;
+}
+.flame{
+    position: absolute;
+    background: radial-gradient(circle at 50% 30%, #fffad0 2px, var(--flame) 10px);
+    opacity: 0;
+    z-index: 4;
+    width: 12px;
+    height: 18px;
+    left: 50%;
+    top: -18%;
+    transform: translateX(-50%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    filter: drop-shadow(0 0 8px #ffb300);
+}
+.scene.play .flame{
+    animation: fadeIn 200ms linear 1.2s both, flicker 180ms ease-in-out 1.2s infinite alternate;
+}
+h2, p{
+    margin: 0;
+    opacity: 0;
+    transform: translateY(10px);
+}
+.scene.play h2{
+    animation: fadeUp .6s ease 1.6s both;
+}
+.scene.play p{
+    animation: fadeUp .6s ease 1.6s both;
+}
+.controls{ display: flex; justify-content: center; gap: 8px;}
+button{
+    background: #1f1f1f;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 0;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+@keyframes slideUp{
+    from{ transform: translateY(30px); opacity: 0;}
+    to  { transform: translateY(0px); opacity: 1;}
+}
+@keyframes icingDrop{
+    0%   { transform: translateY(-30px); opacity: 0;}
+    60%  { transform: translateY(6px); opacity: 1;}
+    100% { transform: translateY(0px); opacity: 1;}
+}
+@keyframes drip{
+    0%   { transform: scaleY(.6) translateY(-6px); opacity: 0;}
+    60%  { transform: scaleY(1) translateX(2px); opacity: 1;}
+    100% { transform: scaleY(1) translateY(0px); opacity: 1;}
+}
+@keyframes flicker{
+    from { transform: translateX(-50%) scale(1); filter: drop-shadow(0 0 6px #ffb300);}
+    to   { transform: translateX(-50%) scale(1.1); filter: drop-shadow(0 0 10px #ffb300); }
+}    
+@keyframes fadeIn{
+    from { opacity: 0;}
+    to   { opacity: 1;}
+}
+@keyframes fadeUp{
+    from { opacity: 0; transform: translateY(10px);}
+    to   { opacity: 1; transform: translateY(0);}
+}
+@media (prefers-reduced-motion: reduce){
+    .layer, .icing, .drip, .candle, .flame, h2, p{
+        animation: none !important;
+        opacity: 1;
+        transform: none;
+    }
+}
